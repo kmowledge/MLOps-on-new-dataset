@@ -3,7 +3,7 @@
 #################################################################################
 
 PROJECT_NAME = social-metrics-vs-school-performance
-PYTHON_VERSION = 3.10
+PYTHON_VERSION = 3.11
 PYTHON_INTERPRETER = python
 
 #################################################################################
