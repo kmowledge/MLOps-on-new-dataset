@@ -1,0 +1,20 @@
+name: code linting
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.7"
+      - name: Install dependencies
+        run: make requirements
+      - name: Lint with flake8
+        run: make lint
