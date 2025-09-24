@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "DSML"
 version = "0.0.1"
-description = "Trying to predict students' grades based on social metrics"
+description = "Trying to predict alcoholism among high school students based on social metrics"
 authors = [
   { name = "kmowledge" },
 ]
