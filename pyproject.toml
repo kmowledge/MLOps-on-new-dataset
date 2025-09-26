@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "DSML"
 version = "0.0.1"
-description = "Trying to predict students' grades based on social metrics"
+description = "Trying to predict alcoholism among high school students based on social metrics"
 authors = [
   { name = "kmowledge" },
 ]
@@ -34,3 +34,5 @@ ignore = ["E731", "E266", "E501", "C901", "N803", "FBT001", "FBT002", "N806", "E
 known-first-party = ["DSML"]
 force-sort-within-sections = true
 
+[tool.setuptools.packages.find]
+where = ["."]
