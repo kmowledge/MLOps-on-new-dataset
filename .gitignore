@@ -6,6 +6,7 @@ __pycache__
 *.pyc
 mlruns
 mlartifacts
+**/raw
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
