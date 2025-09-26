@@ -7,15 +7,14 @@ from loguru import logger
 # Load environment variables from .env file if it exists
 load_dotenv()
 
+DATASET = "gabrielluizone/high-school-alcoholism-and-academic-performance"
+
 # Paths
 PROJ_ROOT = Path(__file__).resolve().parents[1]
 logger.info(f"PROJ_ROOT path is: {PROJ_ROOT}")
-
-DATASET = "gabrielluizone/high-school-alcoholism-and-academic-performance"
-DATASET_FILE_DIR = "EN_Dataset/en_lpor_explorer.csv"
-
 DATA_DIR = PROJ_ROOT / "dataset"
 RAW_DATA_DIR = DATA_DIR / "raw"
+DATASET_FILE_PATH = RAW_DATA_DIR / "EN_Dataset/en_lpor_explorer.csv"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 
 MODELS_DIR = PROJ_ROOT / "models"
