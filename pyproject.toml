@@ -34,3 +34,5 @@ ignore = ["E731", "E266", "E501", "C901", "N803", "FBT001", "FBT002", "N806", "E
 known-first-party = ["DSML"]
 force-sort-within-sections = true
 
+[tool.setuptools.packages.find]
+where = ["."]
