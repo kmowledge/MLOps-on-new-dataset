@@ -176,7 +176,7 @@ def train(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:list[i
         reference_df["prediction"] = model.predict(X_train)
         reference_df["predicted_probability"] = [p[1] for p in model.predict_proba(X_train)]
         reference_df[target] = y_train
-        col_names = reference_df.drop(columns=["prediction", target, "predicted_probability"]).columns
+        reference_df.drop(columns=["prediction", target, "predicted_probability"]).columns
         chunk_size = 50
 
         # univariate drift for features
@@ -203,9 +203,6 @@ def train(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:list[i
 
         mlflow.log_artifact(MODELS_DIR / "udc.pkl")
         mlflow.log_artifact(MODELS_DIR / "estimator.pkl")
-
-
-
     return (model_path, model_params_path)
 
 
@@ -285,6 +282,7 @@ def get_or_create_experiment(experiment_name:str):
         return experiment.experiment_id
 
     return mlflow.create_experiment(experiment_name)
+
 
 if __name__=="__main__":
     # for running in workflow in actions again again

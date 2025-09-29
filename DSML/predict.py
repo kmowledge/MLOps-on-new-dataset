@@ -1,18 +1,19 @@
 """Run prediction on test data."""
-from pathlib import Path
-from catboost import CatBoostClassifier
-import matplotlib.pyplot as plt
-import pandas as pd
-from loguru import logger
-import shap
-import joblib
+import json
 import os
-from DSML.config import FIGURES_DIR, MODELS_DIR, target, PROCESSED_DATA_DIR, categorical, MODEL_NAME
-from DSML.resolve import get_model_by_alias
+from pathlib import Path
+
+from catboost import CatBoostClassifier
+from loguru import logger
+import matplotlib.pyplot as plt
 import mlflow
 from mlflow.client import MlflowClient
-import json
 import nannyml as nml
+import pandas as pd
+import shap
+
+from DSML.config import FIGURES_DIR, MODEL_NAME, MODELS_DIR, PROCESSED_DATA_DIR, target
+from DSML.resolve import get_model_by_alias
 
 
 def plot_shap(model:CatBoostClassifier, df_plot:pd.DataFrame)->None:
@@ -26,9 +27,9 @@ def plot_shap(model:CatBoostClassifier, df_plot:pd.DataFrame)->None:
 
 def predict(model:CatBoostClassifier, df_pred:pd.DataFrame, params:dict, probs=False)->str|Path:
     """Do predictions on test data."""
-    
+
     feature_columns = params.pop("feature_columns")
-    
+
     preds = model.predict(df_pred[feature_columns])
     if probs:
         df_pred["predicted_probability"] = [p[1] for p in model.predict_proba(df_pred[feature_columns])]
@@ -59,7 +60,6 @@ if __name__=="__main__":
     log_model_meta = json.loads(run.data.tags['mlflow.log-model.history'])
     log_model_meta[0]['signature']
 
-
     _, artifact_folder = os.path.split(model_info.source)
     logger.info(artifact_folder)
     model_uri = "runs:/{}/{}".format(model_info.run_id, artifact_folder)
@@ -72,18 +72,17 @@ if __name__=="__main__":
     store = nml.io.store.FilesystemStore(root_path=str(MODELS_DIR))
     udc = store.load(filename="udc.pkl", as_type=nml.UnivariateDriftCalculator)
     estimator = store.load(filename="estimator.pkl", as_type=nml.CBPE)
-    
+
     params = run_data_dict["params"]
     params["feature_columns"] = [inp["name"] for inp in json.loads(log_model_meta[0]['signature']['inputs'])]
     preds_path = predict(loaded_model, df_test, params, probs=True)
-    
+
     df_preds = pd.read_csv(preds_path)
 
     analysis_df = df_test.copy()
     analysis_df["prediction"] = df_preds[target]
     analysis_df["predicted_probability"] = df_preds["predicted_probability"]
 
-    from DSML.train import get_or_create_experiment
     from DSML.helpers import get_git_commit_hash
     git_hash = get_git_commit_hash()
     mlflow.set_experiment("titanic_predictions")
@@ -99,6 +98,6 @@ if __name__=="__main__":
                 mlflow.log_figure(fig2, f"univariate_drift_{p}.png")
                 fig3 = univariate_drift.filter(period="analysis", column_names=[p]).plot(kind='distribution')
                 mlflow.log_figure(fig3, f"univariate_drift_dist_{p}.png")
-            except:
-                logger.info("failed to plot some univariate drift analyses!")
+            except Exception as e:
+                logger.info(f"failed to plot some univariate drift analyses! Exception: {e}")
         mlflow.log_params({"git_hash": git_hash})
