@@ -24,7 +24,6 @@ from DSML.helpers import get_git_commit_hash
 import nannyml as nml
 
 
-# comment to trigger workflow ver6
 
 def run_hyperopt(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:list[int], test_size:float=0.25, n_trials:int=20, overwrite:bool=False)->str|Path:  # noqa: PLR0913
     """Run optuna hyperparameter tuning."""
@@ -181,7 +180,7 @@ def train(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:list[i
 
         # univariate drift for features
         udc = nml.UnivariateDriftCalculator(
-            column_names=X_train.drop("PassengerId", axis=1).columns,
+            column_names=X_train.columns,
             chunk_size=chunk_size,
         )
         udc.fit(reference_df.drop(columns=["prediction", target, "predicted_probability"]))
@@ -285,7 +284,6 @@ def get_or_create_experiment(experiment_name:str):
 
 
 if __name__=="__main__":
-    # for running in workflow in actions again again
     df_train = pd.read_csv(PROCESSED_DATA_DIR / "train.csv")
 
     y_train = df_train.pop(target)
