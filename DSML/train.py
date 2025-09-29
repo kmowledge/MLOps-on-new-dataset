@@ -6,6 +6,7 @@ import joblib
 from loguru import logger
 import mlflow
 from mlflow.client import MlflowClient
+import nannyml as nml
 import optuna
 import pandas as pd
 import plotly.graph_objects as go
@@ -21,8 +22,6 @@ from DSML.config import (
     target,
 )
 from DSML.helpers import get_git_commit_hash
-import nannyml as nml
-
 
 
 def run_hyperopt(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:list[int], test_size:float=0.25, n_trials:int=20, overwrite:bool=False)->str|Path:  # noqa: PLR0913
@@ -96,7 +95,7 @@ def train_cv(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:lis
 
 
 def train(X_train:pd.DataFrame, y_train:pd.DataFrame, categorical_indices:list[int],  # noqa: PLR0913
-          params:dict|None, artifact_name:str="catboost_model_titanic", cv_results=None,
+          params:dict|None, artifact_name:str="catboost_model_studalco", cv_results=None,
           )->tuple[str|Path]:
     """Train model on full dataset without cross-validation."""
     if params is None:

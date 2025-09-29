@@ -2,6 +2,7 @@
 import json
 import os
 from pathlib import Path
+import traceback
 
 from catboost import CatBoostClassifier
 from loguru import logger
@@ -85,7 +86,7 @@ if __name__=="__main__":
 
     from DSML.helpers import get_git_commit_hash
     git_hash = get_git_commit_hash()
-    mlflow.set_experiment("titanic_predictions")
+    mlflow.set_experiment("studalco_predictions")
     with mlflow.start_run(tags={"git_sha": get_git_commit_hash()}):
         estimated_performance = estimator.estimate(analysis_df)
         fig1 = estimated_performance.plot()
@@ -96,8 +97,12 @@ if __name__=="__main__":
             try:
                 fig2 = univariate_drift.filter(column_names=[p]).plot()
                 mlflow.log_figure(fig2, f"univariate_drift_{p}.png")
-                fig3 = univariate_drift.filter(period="analysis", column_names=[p]).plot(kind='distribution')
+                drift_data = univariate_drift.filter(period="analysis", column_names=[p])
+                if not drift_data.empty and drift_data.values.any():
+                    fig3 = drift_data.plot(kind='distribution')
                 mlflow.log_figure(fig3, f"univariate_drift_dist_{p}.png")
             except Exception as e:
-                logger.info(f"failed to plot some univariate drift analyses! Exception: {e}")
+                logger.info(f"Failed to plot some univariate drift analysis for column {p}: {str(e)}")
+                logger.debug(f"Full traceback: {traceback.format_exc()}")
+                continue
         mlflow.log_params({"git_hash": git_hash})
