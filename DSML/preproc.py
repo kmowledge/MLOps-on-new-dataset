@@ -33,8 +33,8 @@ def preprocess_df(data:str|Path=DATASET_FILE_PATH)->None:
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    X_train.assign(target=y_train).to_csv(PROCESSED_DATA_DIR / "train.csv", index=False)
-    X_test.assign(target=y_test).to_csv(PROCESSED_DATA_DIR / "test.csv", index=False)
+    X_train.assign(**{y_train.name:y_train}).to_csv(PROCESSED_DATA_DIR / "train.csv", index=False)
+    X_test.assign(**{y_test.name:y_test}).to_csv(PROCESSED_DATA_DIR / "test.csv", index=False)
 
 
 if __name__=="__main__":
