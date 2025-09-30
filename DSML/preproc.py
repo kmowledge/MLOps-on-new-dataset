@@ -1,5 +1,5 @@
 """Functions for preprocessing the data."""
-# This comment is inserted only to trigger pipelines. 123
+# This comment is inserted only to trigger pipelines.
 import os
 from pathlib import Path
 
