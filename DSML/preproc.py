@@ -1,8 +1,8 @@
 """Functions for preprocessing the data."""
-# This comment is inserted only to trigger pipelines. 123
 import os
 from pathlib import Path
 
+# This comment is inserted only to trigger pipelines.
 from kaggle.api.kaggle_api_extended import KaggleApi
 from loguru import logger
 import pandas as pd
