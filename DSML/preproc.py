@@ -1,5 +1,5 @@
 """Functions for preprocessing the data."""
-# This comment is inserted only to trigger pipelines.
+# Removing a comment doesn't mean a change on main.
 import os
 from pathlib import Path
 
